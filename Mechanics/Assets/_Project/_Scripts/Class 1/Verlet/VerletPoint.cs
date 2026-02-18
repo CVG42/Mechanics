@@ -1,39 +1,41 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
-public class VerletPoint
+namespace VerletIntegration
 {
-    public Vector2 position;
-    public bool locked;
-
-    private Vector2 _previousPosition;
-    
-    public VerletPoint(Vector2 startPos, bool locked)
+    public class VerletPoint
     {
-        this.position = startPos;
-        this._previousPosition = startPos;
-        this.locked = locked;
-    }
+        public Vector2 position;
+        public bool locked;
 
-    public void Integrate(Vector2 gravity, float dt, float damping)
-    {
-        if (locked) return;
+        private Vector2 _previousPosition;
 
-        Vector2 velocity = (position - _previousPosition) * damping;
-        float maxSpeed = 6f;
-        velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+        public VerletPoint(Vector2 startPos, bool locked)
+        {
+            position = startPos;
+            _previousPosition = startPos;
+            this.locked = locked;
+        }
 
-        _previousPosition = position;
-        position += velocity + gravity * dt * dt;
-    }
+        public void Integrate(Vector2 gravity, float dt, float damping)
+        {
+            if (locked) return;
 
-    public Vector2 GetVelocity()
-    {
-        return position - _previousPosition;
-    }
+            Vector2 velocity = (position - _previousPosition) * damping;
+            float maxSpeed = 6f;
+            velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
 
-    public void SetVelocity(Vector2 newVelocity)
-    {
-        _previousPosition = position - newVelocity;
+            _previousPosition = position;
+            position += velocity + gravity * dt * dt;
+        }
+
+        public Vector2 GetVelocity()
+        {
+            return position - _previousPosition;
+        }
+
+        public void SetVelocity(Vector2 newVelocity)
+        {
+            _previousPosition = position - newVelocity;
+        }
     }
 }

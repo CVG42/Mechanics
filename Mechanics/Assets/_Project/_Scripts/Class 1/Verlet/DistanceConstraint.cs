@@ -1,36 +1,39 @@
 using UnityEngine;
 
-public class DistanceConstraint
+namespace VerletIntegration
 {
-    public VerletPoint pointA;
-    public VerletPoint pointB;
-
-    public float resetLenght;
-
-    public DistanceConstraint(VerletPoint a, VerletPoint b, float lenght)
+    public class DistanceConstraint
     {
-        pointA = a;
-        pointB = b;
-        resetLenght = lenght;
-    }
+        public VerletPoint pointA;
+        public VerletPoint pointB;
 
-    public void Solve()
-    {
-        Vector2 delta = pointB.position - pointA.position;
-        float distance = delta.magnitude;
+        public float resetLenght;
 
-        if (distance == 0) return;
-
-        float difference = (distance - resetLenght) / distance;
-
-        if (!pointA.locked)
+        public DistanceConstraint(VerletPoint a, VerletPoint b, float lenght)
         {
-            pointA.position += delta * 0.5f * difference;
+            pointA = a;
+            pointB = b;
+            resetLenght = lenght;
         }
 
-        if (!pointB.locked)
+        public void Solve()
         {
-            pointB.position -= delta * 0.5f * difference;
+            Vector2 delta = pointB.position - pointA.position;
+            float distance = delta.magnitude;
+
+            if (distance == 0) return;
+
+            float difference = (distance - resetLenght) / distance;
+
+            if (!pointA.locked)
+            {
+                pointA.position += delta * 0.5f * difference;
+            }
+
+            if (!pointB.locked)
+            {
+                pointB.position -= delta * 0.5f * difference;
+            }
         }
     }
 }
