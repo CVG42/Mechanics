@@ -1,41 +1,38 @@
 using UnityEngine;
 
-namespace VerletIntegration
+public class VerletPoint
 {
-    public class VerletPoint
+    public Vector2 position;
+    public bool locked;
+
+    private Vector2 _previousPosition;
+    
+    public VerletPoint(Vector2 startPos, bool locked)
     {
-        public Vector2 position;
-        public bool locked;
+        this.position = startPos;
+        this._previousPosition = startPos;
+        this.locked = locked;
+    }
 
-        private Vector2 _previousPosition;
+    public void Integrate(Vector2 gravity, float dt, float damping)
+    {
+        if (locked) return;
 
-        public VerletPoint(Vector2 startPos, bool locked)
-        {
-            position = startPos;
-            _previousPosition = startPos;
-            this.locked = locked;
-        }
+        Vector2 velocity = (position - _previousPosition) * damping;
+        float maxSpeed = 6f;
+        velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
 
-        public void Integrate(Vector2 gravity, float dt, float damping)
-        {
-            if (locked) return;
+        _previousPosition = position;
+        position += velocity + gravity * dt * dt;
+    }
 
-            Vector2 velocity = (position - _previousPosition) * damping;
-            float maxSpeed = 6f;
-            velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+    public Vector2 GetVelocity()
+    {
+        return position - _previousPosition;
+    }
 
-            _previousPosition = position;
-            position += velocity + gravity * dt * dt;
-        }
-
-        public Vector2 GetVelocity()
-        {
-            return position - _previousPosition;
-        }
-
-        public void SetVelocity(Vector2 newVelocity)
-        {
-            _previousPosition = position - newVelocity;
-        }
+    public void SetVelocity(Vector2 newVelocity)
+    {
+        _previousPosition = position - newVelocity;
     }
 }
